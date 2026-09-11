@@ -1,0 +1,8 @@
+{
+  "name": "Scribble's Diaper Chart",
+  "short_name": "Diaper Chart",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#08192a",
+  "theme_color": "#102842"
+}
