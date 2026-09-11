@@ -7,8 +7,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Diaper Chart">
-<title>Scribble's Diaper Chart — September 2026</title>
+<meta name="apple-mobile-web-app-title" content="Good Boy">
+<title>Good Boy</title>
 <style>
 :root{
   --navy:#102842;--navy2:#163655;--blue:#2e74b8;--red:#c95761;--yellow:#d6ad3a;
@@ -22,7 +22,7 @@ body{padding:10px 10px calc(18px + env(safe-area-inset-bottom))}
 .board{background:linear-gradient(145deg,#102842,#0c2138);border:1px solid #285f92;border-radius:18px;padding:12px}
 .top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
 .brand{font-size:clamp(22px,4vw,40px);font-weight:900;line-height:1}
-.month{font-size:clamp(18px,2.7vw,28px);font-weight:900;color:#cbdcf0}
+.month-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.month{font-size:clamp(18px,2.7vw,28px);font-weight:900;color:#cbdcf0;min-width:190px;text-align:center}.navbtn{min-height:38px;min-width:42px;padding:4px 10px;font-size:22px;line-height:1}
 .layout{display:grid;grid-template-columns:minmax(760px,1fr) 200px;gap:10px;align-items:start}
 .calendar-scroll{overflow-x:auto}
 .calendar{min-width:760px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0c2138}
@@ -47,14 +47,14 @@ body{padding:10px 10px calc(18px + env(safe-area-inset-bottom))}
 .side{display:grid;gap:10px}.panel{border:1px solid #2a73ad;border-radius:14px;padding:10px;background:#0c2440}
 .panel h3{margin:0 0 8px;font-size:20px;color:#a9c9eb}.stamp-grid{display:grid;gap:7px}
 button{min-height:44px;border-radius:10px;border:1px solid #557da5;background:#173858;color:#eef4fb;font-weight:800;padding:7px 8px}
-button:focus-visible{outline:3px solid #d6ad3a;outline-offset:2px}
+button:disabled{opacity:.35}button:focus-visible{outline:3px solid #d6ad3a;outline-offset:2px}
 .stamp-button{background:#e9edf2;color:#203247;display:flex;align-items:center;justify-content:center;gap:8px;min-height:58px}
 .stamp-button svg{width:42px;height:42px}.tool{width:100%;margin-top:7px}.danger{background:#8f3942;border-color:#b85d66}
 .yellow-tool{background:#6f5b25;border-color:#a58a38}.status{margin-top:9px;min-height:18px;text-align:center;color:#9eb3c8;font-size:12px}
 .footer{margin-top:10px;border:1px solid #28689d;border-radius:12px;padding:8px 12px;color:#c4d4e5;
  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px}
 @media(max-width:880px){.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.stamp-grid{grid-template-columns:repeat(5,1fr)}.stamp-button span{display:none}}
-@media(max-width:560px){.side{grid-template-columns:1fr}.stamp-grid{grid-template-columns:repeat(5,1fr)}.board{padding:8px}}
+@media(max-width:560px){.side{grid-template-columns:1fr}.stamp-grid{grid-template-columns:repeat(5,1fr)}.board{padding:8px}.top{align-items:flex-start}.month-nav{width:100%;justify-content:space-between}.month{flex:1;min-width:0}}
 </style>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
@@ -62,7 +62,7 @@ button:focus-visible{outline:3px solid #d6ad3a;outline-offset:2px}
 </head>
 <body>
 <div class="app"><div class="board">
-  <div class="top"><div class="brand">Scribble’s Diaper Chart</div><div class="month">September 2026</div></div>
+  <div class="top"><div class="brand">Good Boy</div><div class="month-nav"><button class="navbtn" id="prevMonth" aria-label="Previous month">‹</button><div class="month" id="monthLabel"></div><button class="navbtn" id="nextMonth" aria-label="Next month">›</button></div></div>
   <div class="layout">
     <div class="calendar-scroll"><div class="calendar">
       <div class="weekdays"><div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div></div>
@@ -83,29 +83,44 @@ button:focus-visible{outline:3px solid #d6ad3a;outline-offset:2px}
         <h3>Tools</h3>
         <button type="button" class="tool yellow-tool" id="cloud">☁ Yellow date cloud</button>
         <button type="button" class="tool" id="clearDay">Clear selected day</button>
-        <button type="button" class="tool danger" id="clearMonth">Clear month</button>
-        <button type="button" class="tool" id="export">Export backup</button>
+        <button type="button" class="tool danger" id="clearMonth">Clear this month</button>
+        <button type="button" class="tool" id="today">Go to current month</button>
+        <button type="button" class="tool" id="export">Export all months</button>
         <div class="status" id="status" aria-live="polite">Your chart auto-saves on this device.</div>
       </section>
     </div>
   </div>
-  <div class="footer"><span>★ Tap a day, then choose a stamp.</span><span>Each date holds up to four stamps.</span></div>
+  <div class="footer"><span>★ Tap a day, then choose a stamp.</span><span>Use ‹ and › to browse months. September 2026 and later are retained.</span></div>
 </div></div>
 <script>
 (()=>{
-const KEY='scribbles-september-2026-v5';
-const state=(()=>{try{const x=JSON.parse(localStorage.getItem(KEY));if(x)return x}catch(e){}const s={};for(let d=1;d<=30;d++)s[d]={stamps:[],cloud:false};return s})();
+const STORE_KEY='good-boy-chart-v1';
+const OLD_SEP_KEY='scribbles-september-2026-v5';
+const START={y:2026,m:8};
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function keyFor(y,m){return `${y}-${String(m+1).padStart(2,'0')}`}
+function daysInMonth(y,m){return new Date(y,m+1,0).getDate()}
+function blankMonth(y,m){const x={};for(let d=1;d<=daysInMonth(y,m);d++)x[d]={stamps:[],cloud:false};return x}
+let all=(()=>{try{return JSON.parse(localStorage.getItem(STORE_KEY))||{}}catch(e){return {}}})();
+if(!all['2026-09']){try{const old=JSON.parse(localStorage.getItem(OLD_SEP_KEY));if(old)all['2026-09']=old}catch(e){}}
+function ensureMonth(y,m){const k=keyFor(y,m);if(!all[k])all[k]=blankMonth(y,m);return all[k]}
+const daysEl=document.getElementById('days'),status=document.getElementById('status'),monthLabel=document.getElementById('monthLabel'),prevBtn=document.getElementById('prevMonth');
+function save(msg){localStorage.setItem(STORE_KEY,JSON.stringify(all));if(msg)status.textContent=msg}
+const now=new Date();let viewY=now.getFullYear(),viewM=now.getMonth();if(viewY<START.y||(viewY===START.y&&viewM<START.m)){viewY=START.y;viewM=START.m}
 let selected=null;
-const daysEl=document.getElementById('days'),status=document.getElementById('status');
-function save(msg){localStorage.setItem(KEY,JSON.stringify(state));status.textContent=msg||'Saved ✓'}
 function pawSvg(color,rot=0,heart=false){return `<svg viewBox="0 0 100 100" style="color:${color};transform:rotate(${rot}deg)"><ellipse fill="currentColor" cx="23" cy="37" rx="8.5" ry="13" transform="rotate(-20 23 37)"/><ellipse fill="currentColor" cx="42" cy="27" rx="8.5" ry="13"/><ellipse fill="currentColor" cx="59" cy="27" rx="8.5" ry="13"/><ellipse fill="currentColor" cx="78" cy="37" rx="8.5" ry="13" transform="rotate(20 78 37)"/><path fill="currentColor" d="M31 70C31 58 39 50 50 50C61 50 69 58 69 70C69 80 62 84 50 84C38 84 31 80 31 70Z"/>${heart?'<path fill="#edf2f7" d="M50 68C45 64 43 61 43 58C43 55 45 53 48 53C50 53 51 54 52.5 55.5C54 54 55.5 53 57.5 53C60.5 53 62.5 55 62.5 58C62.5 61 59.5 64 53 69Z"/>':''}</svg>`}
 function stampSvg(k){if(k==='redpaw')return pawSvg('#c95761');if(k==='redpawdown')return pawSvg('#c95761',180);if(k==='heartpaw')return pawSvg('#6c54a8',0,true);if(k==='star')return '<svg viewBox="0 0 100 100" style="color:#3563bf"><path fill="currentColor" d="M50 8l12 26 28 3-21 19 6 28-25-14-25 14 6-28L10 37l28-3z"/></svg>';return '<svg viewBox="0 0 100 100" style="color:#754735"><path fill="currentColor" d="M18 57C10 57 5 52 5 45C5 38 10 33 17 33C21 33 25 35 28 38C32 27 41 21 52 21C64 21 74 29 77 40C80 38 84 37 88 37C95 37 100 42 100 49C100 56 95 61 88 61H18Z"/><rect fill="currentColor" x="28" y="69" width="5" height="15" rx="2.5"/><rect fill="currentColor" x="47" y="69" width="5" height="15" rx="2.5"/><rect fill="currentColor" x="66" y="69" width="5" height="15" rx="2.5"/></svg>'}
-function render(){daysEl.innerHTML='';for(let i=0;i<35;i++){const d=i-1;const cell=document.createElement('div');if(d<1||d>30){cell.className='day blank';daysEl.appendChild(cell);continue}cell.className='day'+(selected===d?' selected':'');cell.tabIndex=0;const date=document.createElement('div');date.className='date';date.innerHTML=state[d].cloud?`<span class="date-cloud">${d}</span>`:d;cell.appendChild(date);const slots=document.createElement('div');slots.className='slots';for(let s=0;s<4;s++){const sl=document.createElement('div');sl.className='slot'+(state[d].stamps[s]?' filled':'');if(state[d].stamps[s]){sl.innerHTML=stampSvg(state[d].stamps[s]);sl.onclick=e=>{e.stopPropagation();state[d].stamps.splice(s,1);save('Stamp removed ✓');render()}}slots.appendChild(sl)}cell.appendChild(slots);cell.onclick=()=>{selected=d;status.textContent=`September ${d} selected`;render()};daysEl.appendChild(cell)}}
-document.querySelectorAll('[data-stamp]').forEach(b=>b.onclick=()=>{if(!selected){status.textContent='Select a date first.';return}if(state[selected].stamps.length>=4){status.textContent='That date already has four stamps.';return}state[selected].stamps.push(b.dataset.stamp);save('Stamp added ✓');render()});
-document.getElementById('cloud').onclick=()=>{if(!selected){status.textContent='Select a date first.';return}state[selected].cloud=!state[selected].cloud;save(state[selected].cloud?'Date cloud added ✓':'Date cloud removed ✓');render()};
-document.getElementById('clearDay').onclick=()=>{if(!selected)return;state[selected]={stamps:[],cloud:false};save('Selected day cleared ✓');render()};
-document.getElementById('clearMonth').onclick=()=>{if(confirm('Clear the entire month?')){for(let d=1;d<=30;d++)state[d]={stamps:[],cloud:false};save('Month cleared ✓');render()}};
-document.getElementById('export').onclick=()=>{const blob=new Blob([JSON.stringify({month:'September 2026',days:state},null,2)],{type:'application/json'});const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='scribbles-diaper-chart-september-2026.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),500);};
+function atStart(){return viewY===START.y&&viewM===START.m}
+function highlight(){[...daysEl.children].forEach(c=>c.classList.remove('selected'));if(selected){const first=new Date(viewY,viewM,1).getDay(),idx=first+selected-1;if(daysEl.children[idx])daysEl.children[idx].classList.add('selected')}}
+function render(keepSelected=false){if(!keepSelected)selected=null;monthLabel.textContent=`${MONTHS[viewM]} ${viewY}`;document.title=`Good Boy — ${MONTHS[viewM]} ${viewY}`;prevBtn.disabled=atStart();const state=ensureMonth(viewY,viewM),count=daysInMonth(viewY,viewM),first=new Date(viewY,viewM,1).getDay(),cells=Math.ceil((first+count)/7)*7;daysEl.innerHTML='';for(let i=0;i<cells;i++){const d=i-first+1,cell=document.createElement('div');if(d<1||d>count){cell.className='day blank';daysEl.appendChild(cell);continue}cell.className='day';cell.tabIndex=0;const date=document.createElement('div');date.className='date';date.innerHTML=state[d].cloud?`<span class="date-cloud">${d}</span>`:d;cell.appendChild(date);const slots=document.createElement('div');slots.className='slots';for(let s=0;s<4;s++){const sl=document.createElement('div');sl.className='slot'+(state[d].stamps[s]?' filled':'');if(state[d].stamps[s]){sl.innerHTML=stampSvg(state[d].stamps[s]);sl.onclick=e=>{e.stopPropagation();state[d].stamps.splice(s,1);save('Stamp removed ✓');render(true)}}slots.appendChild(sl)}cell.appendChild(slots);cell.onclick=()=>{selected=d;status.textContent=`${MONTHS[viewM]} ${d} selected`;highlight()};daysEl.appendChild(cell)}highlight();save()}
+document.querySelectorAll('[data-stamp]').forEach(b=>b.onclick=()=>{if(!selected){status.textContent='Select a date first.';return}const state=ensureMonth(viewY,viewM);if(state[selected].stamps.length>=4){status.textContent='That date already has four stamps.';return}state[selected].stamps.push(b.dataset.stamp);save('Stamp added ✓');render(true)});
+document.getElementById('cloud').onclick=()=>{if(!selected){status.textContent='Select a date first.';return}const state=ensureMonth(viewY,viewM);state[selected].cloud=!state[selected].cloud;save(state[selected].cloud?'Date cloud added ✓':'Date cloud removed ✓');render(true)};
+document.getElementById('clearDay').onclick=()=>{if(!selected)return;const state=ensureMonth(viewY,viewM);state[selected]={stamps:[],cloud:false};save('Selected day cleared ✓');render(true)};
+document.getElementById('clearMonth').onclick=()=>{if(confirm(`Clear all of ${MONTHS[viewM]} ${viewY}?`)){all[keyFor(viewY,viewM)]=blankMonth(viewY,viewM);save('Month cleared ✓');render()}};
+document.getElementById('prevMonth').onclick=()=>{if(atStart())return;if(--viewM<0){viewM=11;viewY--}status.textContent='';render()};
+document.getElementById('nextMonth').onclick=()=>{if(++viewM>11){viewM=0;viewY++}status.textContent='';render()};
+document.getElementById('today').onclick=()=>{const n=new Date();viewY=n.getFullYear();viewM=n.getMonth();if(viewY<START.y||(viewY===START.y&&viewM<START.m)){viewY=START.y;viewM=START.m}render()};
+document.getElementById('export').onclick=()=>{save();const blob=new Blob([JSON.stringify({app:'Good Boy',version:1,months:all},null,2)],{type:'application/json'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='good-boy-chart-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),500)};
 render();
 })();
 </script>
