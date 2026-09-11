@@ -11,15 +11,17 @@
 <title>Good Boy</title>
 <style>
 :root{
-  --navy:#102842;--navy2:#163655;--blue:#2e74b8;--red:#c95761;--yellow:#d6ad3a;
-  --brown:#754735;--purple:#6c54a8;--cream:#edf2f7;--muted:#99adc1;--line:#2a6ea9
+  --page:#08192a;--board1:#102842;--board2:#0c2138;--panel:#0c2440;--cell1:#102a45;--cell2:#0e243c;
+  --blank1:#0d2238;--blank2:#112a43;--header1:#245a89;--header2:#1b476e;--selected:#163653;
+  --line:#2a6ea9;--line-soft:#285f92;--accent:#78a9d9;--cream:#edf2f7;--muted:#99adc1;
+  --red:#c95761;--yellow:#d6ad3a;--brown:#754735;--purple:#6c54a8
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:#08192a;color:var(--cream);
+html,body{margin:0;min-height:100%;background:var(--page);color:var(--cream);
   font-family:ui-rounded,"Arial Rounded MT Bold",system-ui,-apple-system,sans-serif}
 body{padding:10px 10px calc(18px + env(safe-area-inset-bottom))}
 .app{max-width:1180px;margin:auto}
-.board{background:linear-gradient(145deg,#102842,#0c2138);border:1px solid #285f92;border-radius:18px;padding:12px}
+.board{background:linear-gradient(145deg,var(--board1),var(--board2));border:1px solid var(--line-soft);border-radius:18px;padding:12px}
 .top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
 .brand{font-size:clamp(22px,4vw,40px);font-weight:900;line-height:1}
 .month-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.month{font-size:clamp(18px,2.7vw,28px);font-weight:900;color:#cbdcf0;min-width:190px;text-align:center}.navbtn{min-height:38px;min-width:42px;padding:4px 10px;font-size:22px;line-height:1}
@@ -27,12 +29,12 @@ body{padding:10px 10px calc(18px + env(safe-area-inset-bottom))}
 .calendar-scroll{overflow-x:auto}
 .calendar{min-width:760px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0c2138}
 .weekdays,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
-.weekdays div{background:linear-gradient(#245a89,#1b476e);text-align:center;font-weight:900;padding:8px 2px;border-right:1px solid #3978ae}
+.weekdays div{background:linear-gradient(var(--header1),var(--header2));text-align:center;font-weight:900;padding:8px 2px;border-right:1px solid var(--line)}
 .weekdays div:last-child{border-right:0}
-.day{position:relative;min-height:122px;background:linear-gradient(145deg,#102a45,#0e243c);
- border-top:1px solid #26689e;border-right:1px solid #26689e;padding:6px;cursor:pointer;outline:none}
-.day:nth-child(7n){border-right:0}.day.blank{background:linear-gradient(145deg,#0d2238,#112a43);cursor:default}
-.day.selected{box-shadow:inset 0 0 0 3px #78a9d9;background:#163653}
+.day{position:relative;min-height:122px;background:linear-gradient(145deg,var(--cell1),var(--cell2));
+ border-top:1px solid var(--line);border-right:1px solid var(--line);padding:6px;cursor:pointer;outline:none}
+.day:nth-child(7n){border-right:0}.day.blank{background:linear-gradient(145deg,var(--blank1),var(--blank2));cursor:default}
+.day.selected{box-shadow:inset 0 0 0 3px var(--accent);background:var(--selected)}
 .day:focus-visible{box-shadow:inset 0 0 0 3px #d6ad3a}
 .date{position:absolute;left:8px;top:6px;font-size:18px;font-weight:900;z-index:2}
 .date-cloud{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:20px;padding:0 5px;color:#18304d;
@@ -44,15 +46,16 @@ body{padding:10px 10px calc(18px + env(safe-area-inset-bottom))}
 .slot{width:36px;height:36px;border:1.5px dashed #8195aa;border-radius:50%;display:grid;place-items:center;background:#112941}
 .slot.filled{border-style:solid;border-color:#536f89;background:#142d47;cursor:pointer}
 .slot svg{width:30px;height:30px;display:block}
-.side{display:grid;gap:10px}.panel{border:1px solid #2a73ad;border-radius:14px;padding:10px;background:#0c2440}
+.side{display:grid;gap:10px}.panel{border:1px solid var(--line);border-radius:14px;padding:10px;background:var(--panel)}
 .panel h3{margin:0 0 8px;font-size:20px;color:#a9c9eb}.stamp-grid{display:grid;gap:7px}
 button{min-height:44px;border-radius:10px;border:1px solid #557da5;background:#173858;color:#eef4fb;font-weight:800;padding:7px 8px}
 button:disabled{opacity:.35}button:focus-visible{outline:3px solid #d6ad3a;outline-offset:2px}
 .stamp-button{background:#e9edf2;color:#203247;display:flex;align-items:center;justify-content:center;gap:8px;min-height:58px}
 .stamp-button svg{width:42px;height:42px}.tool{width:100%;margin-top:7px}.danger{background:#8f3942;border-color:#b85d66}
 .yellow-tool{background:#6f5b25;border-color:#a58a38}.status{margin-top:9px;min-height:18px;text-align:center;color:#9eb3c8;font-size:12px}
-.footer{margin-top:10px;border:1px solid #28689d;border-radius:12px;padding:8px 12px;color:#c4d4e5;
+.footer{margin-top:10px;border:1px solid var(--line);border-radius:12px;padding:8px 12px;color:#c4d4e5;
  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px}
+.name-row{display:flex;align-items:center;gap:8px;margin:2px 0 12px;font-size:18px;font-weight:900;color:#cbdcf0}.name-row label{white-space:nowrap}.name-input{flex:1;min-width:120px;max-width:360px;background:transparent;border:0;border-bottom:2px solid var(--accent);color:var(--cream);font:inherit;font-weight:800;padding:4px 6px;outline:none}.name-input::placeholder{color:var(--muted);opacity:.7}.name-input:focus{border-bottom-color:var(--yellow)}.hidden-file{display:none}
 @media(max-width:880px){.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.stamp-grid{grid-template-columns:repeat(5,1fr)}.stamp-button span{display:none}}
 @media(max-width:560px){.side{grid-template-columns:1fr}.stamp-grid{grid-template-columns:repeat(5,1fr)}.board{padding:8px}.top{align-items:flex-start}.month-nav{width:100%;justify-content:space-between}.month{flex:1;min-width:0}}
 </style>
@@ -63,6 +66,7 @@ button:disabled{opacity:.35}button:focus-visible{outline:3px solid #d6ad3a;outli
 <body>
 <div class="app"><div class="board">
   <div class="top"><div class="brand">Good Boy</div><div class="month-nav"><button class="navbtn" id="prevMonth" aria-label="Previous month">‹</button><div class="month" id="monthLabel"></div><button class="navbtn" id="nextMonth" aria-label="Next month">›</button></div></div>
+  <div class="name-row"><label for="littleName">Name:</label><input id="littleName" class="name-input" type="text" maxlength="40" autocomplete="name" placeholder="Your name"></div>
   <div class="layout">
     <div class="calendar-scroll"><div class="calendar">
       <div class="weekdays"><div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div></div>
@@ -86,25 +90,45 @@ button:disabled{opacity:.35}button:focus-visible{outline:3px solid #d6ad3a;outli
         <button type="button" class="tool danger" id="clearMonth">Clear this month</button>
         <button type="button" class="tool" id="today">Go to current month</button>
         <button type="button" class="tool" id="export">Export all months</button>
+        <button type="button" class="tool" id="import">Import backup</button>
+        <input class="hidden-file" type="file" id="importFile" accept="application/json,.json">
         <div class="status" id="status" aria-live="polite">Your chart auto-saves on this device.</div>
       </section>
     </div>
   </div>
-  <div class="footer"><span>★ Tap a day, then choose a stamp.</span><span>Use ‹ and › to browse months. September 2026 and later are retained.</span></div>
+  <div class="footer"><span>★ Tap a day, then choose a stamp.</span><span>Use ‹ and › to browse months. Each month gets its own dark color theme. September 2026 and later are retained.</span></div>
 </div></div>
 <script>
 (()=>{
 const STORE_KEY='good-boy-chart-v1';
 const OLD_SEP_KEY='scribbles-september-2026-v5';
+const PROFILE_KEY='good-boy-profile-v1';
 const START={y:2026,m:8};
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const THEMES=[
+  {page:'#071b2c',board1:'#12314d',board2:'#0b2237',panel:'#102a43',cell1:'#143451',cell2:'#0d263d',blank1:'#0b2034',blank2:'#102b43',header1:'#397aa0',header2:'#245a7b',selected:'#1b4663',line:'#3b7fa6',soft:'#2c688a',accent:'#86c4df'},
+  {page:'#1c1024',board1:'#32193e',board2:'#24112e',panel:'#2c1736',cell1:'#381d46',cell2:'#281334',blank1:'#21102b',blank2:'#30183b',header1:'#7b4a87',header2:'#5e3569',selected:'#4a2857',line:'#81518d',soft:'#673f72',accent:'#c49bd0'},
+  {page:'#081d19',board1:'#123b32',board2:'#0b2b24',panel:'#10362e',cell1:'#154137',cell2:'#0e3029',blank1:'#0b2923',blank2:'#11372f',header1:'#367b67',header2:'#285f50',selected:'#1d5145',line:'#3b806d',soft:'#2c6a5a',accent:'#8bc9b6'},
+  {page:'#1a1508',board1:'#3c3214',board2:'#2a220c',panel:'#352c11',cell1:'#443817',cell2:'#30270f',blank1:'#29210c',blank2:'#382e12',header1:'#85703a',header2:'#66552b',selected:'#58491f',line:'#8a743c',soft:'#6d5d31',accent:'#d6be73'},
+  {page:'#0d1724',board1:'#20344f',board2:'#14263b',panel:'#1b3048',cell1:'#233a56',cell2:'#182b42',blank1:'#13263a',blank2:'#1b324a',header1:'#55799e',header2:'#3d5d7c',selected:'#2e4b67',line:'#5b80a5',soft:'#486b8c',accent:'#a9c7e5'},
+  {page:'#101d16',board1:'#253b2e',board2:'#182b20',panel:'#203629',cell1:'#294332',cell2:'#1c3025',blank1:'#17291f',blank2:'#22392b',header1:'#5e8468',header2:'#47664f',selected:'#355740',line:'#64896e',soft:'#4f7159',accent:'#add1b5'},
+  {page:'#20120c',board1:'#4b2b1e',board2:'#341d14',panel:'#412519',cell1:'#533023',cell2:'#3a2117',blank1:'#311b13',blank2:'#45271b',header1:'#97634a',header2:'#754a37',selected:'#633b2a',line:'#9b674d',soft:'#7d523f',accent:'#d9a68d'},
+  {page:'#0a1c25',board1:'#123b4c',board2:'#0c2a37',panel:'#103543',cell1:'#154252',cell2:'#0f303d',blank1:'#0b2935',blank2:'#113847',header1:'#377f94',header2:'#286173',selected:'#1d5363',line:'#3d8499',soft:'#306b7d',accent:'#8bcbdc'},
+  {page:'#08192a',board1:'#102842',board2:'#0c2138',panel:'#0c2440',cell1:'#102a45',cell2:'#0e243c',blank1:'#0d2238',blank2:'#112a43',header1:'#245a89',header2:'#1b476e',selected:'#163653',line:'#2a6ea9',soft:'#285f92',accent:'#78a9d9'},
+  {page:'#1d110b',board1:'#402216',board2:'#2d170f',panel:'#381e14',cell1:'#48261a',cell2:'#321b12',blank1:'#2a160f',blank2:'#3b2015',header1:'#8c5531',header2:'#6c4025',selected:'#5b321f',line:'#925936',soft:'#74472c',accent:'#d79a65'},
+  {page:'#17130d',board1:'#38301d',board2:'#282115',panel:'#332b1a',cell1:'#403620',cell2:'#2d2618',blank1:'#262014',blank2:'#362e1c',header1:'#806d42',header2:'#625431',selected:'#554727',line:'#867148',soft:'#6a5a39',accent:'#d2bd82'},
+  {page:'#071a16',board1:'#12382e',board2:'#0b2922',panel:'#103229',cell1:'#153e33',cell2:'#0e2d25',blank1:'#0a271f',blank2:'#11352c',header1:'#396f61',header2:'#2b564a',selected:'#1d4c40',line:'#3e7667',soft:'#315f53',accent:'#86b9aa'}
+];
+function applyTheme(m){const t=THEMES[m];const r=document.documentElement.style;for(const [k,v] of Object.entries(t)){const css={'soft':'line-soft'}[k]||k;r.setProperty('--'+css,v)}}
 function keyFor(y,m){return `${y}-${String(m+1).padStart(2,'0')}`}
 function daysInMonth(y,m){return new Date(y,m+1,0).getDate()}
 function blankMonth(y,m){const x={};for(let d=1;d<=daysInMonth(y,m);d++)x[d]={stamps:[],cloud:false};return x}
 let all=(()=>{try{return JSON.parse(localStorage.getItem(STORE_KEY))||{}}catch(e){return {}}})();
+let profile=(()=>{try{return JSON.parse(localStorage.getItem(PROFILE_KEY))||{name:''}}catch(e){return {name:''}}})();
 if(!all['2026-09']){try{const old=JSON.parse(localStorage.getItem(OLD_SEP_KEY));if(old)all['2026-09']=old}catch(e){}}
 function ensureMonth(y,m){const k=keyFor(y,m);if(!all[k])all[k]=blankMonth(y,m);return all[k]}
-const daysEl=document.getElementById('days'),status=document.getElementById('status'),monthLabel=document.getElementById('monthLabel'),prevBtn=document.getElementById('prevMonth');
+const daysEl=document.getElementById('days'),status=document.getElementById('status'),monthLabel=document.getElementById('monthLabel'),prevBtn=document.getElementById('prevMonth'),nameEl=document.getElementById('littleName');
+nameEl.value=profile.name||'';nameEl.addEventListener('input',()=>{profile.name=nameEl.value;localStorage.setItem(PROFILE_KEY,JSON.stringify(profile));});
 function save(msg){localStorage.setItem(STORE_KEY,JSON.stringify(all));if(msg)status.textContent=msg}
 const now=new Date();let viewY=now.getFullYear(),viewM=now.getMonth();if(viewY<START.y||(viewY===START.y&&viewM<START.m)){viewY=START.y;viewM=START.m}
 let selected=null;
@@ -112,7 +136,7 @@ function pawSvg(color,rot=0,heart=false){return `<svg viewBox="0 0 100 100" styl
 function stampSvg(k){if(k==='redpaw')return pawSvg('#c95761');if(k==='redpawdown')return pawSvg('#c95761',180);if(k==='heartpaw')return pawSvg('#6c54a8',0,true);if(k==='star')return '<svg viewBox="0 0 100 100" style="color:#3563bf"><path fill="currentColor" d="M50 8l12 26 28 3-21 19 6 28-25-14-25 14 6-28L10 37l28-3z"/></svg>';return '<svg viewBox="0 0 100 100" style="color:#754735"><path fill="currentColor" d="M18 57C10 57 5 52 5 45C5 38 10 33 17 33C21 33 25 35 28 38C32 27 41 21 52 21C64 21 74 29 77 40C80 38 84 37 88 37C95 37 100 42 100 49C100 56 95 61 88 61H18Z"/><rect fill="currentColor" x="28" y="69" width="5" height="15" rx="2.5"/><rect fill="currentColor" x="47" y="69" width="5" height="15" rx="2.5"/><rect fill="currentColor" x="66" y="69" width="5" height="15" rx="2.5"/></svg>'}
 function atStart(){return viewY===START.y&&viewM===START.m}
 function highlight(){[...daysEl.children].forEach(c=>c.classList.remove('selected'));if(selected){const first=new Date(viewY,viewM,1).getDay(),idx=first+selected-1;if(daysEl.children[idx])daysEl.children[idx].classList.add('selected')}}
-function render(keepSelected=false){if(!keepSelected)selected=null;monthLabel.textContent=`${MONTHS[viewM]} ${viewY}`;document.title=`Good Boy — ${MONTHS[viewM]} ${viewY}`;prevBtn.disabled=atStart();const state=ensureMonth(viewY,viewM),count=daysInMonth(viewY,viewM),first=new Date(viewY,viewM,1).getDay(),cells=Math.ceil((first+count)/7)*7;daysEl.innerHTML='';for(let i=0;i<cells;i++){const d=i-first+1,cell=document.createElement('div');if(d<1||d>count){cell.className='day blank';daysEl.appendChild(cell);continue}cell.className='day';cell.tabIndex=0;const date=document.createElement('div');date.className='date';date.innerHTML=state[d].cloud?`<span class="date-cloud">${d}</span>`:d;cell.appendChild(date);const slots=document.createElement('div');slots.className='slots';for(let s=0;s<4;s++){const sl=document.createElement('div');sl.className='slot'+(state[d].stamps[s]?' filled':'');if(state[d].stamps[s]){sl.innerHTML=stampSvg(state[d].stamps[s]);sl.onclick=e=>{e.stopPropagation();state[d].stamps.splice(s,1);save('Stamp removed ✓');render(true)}}slots.appendChild(sl)}cell.appendChild(slots);cell.onclick=()=>{selected=d;status.textContent=`${MONTHS[viewM]} ${d} selected`;highlight()};daysEl.appendChild(cell)}highlight();save()}
+function render(keepSelected=false){applyTheme(viewM);if(!keepSelected)selected=null;monthLabel.textContent=`${MONTHS[viewM]} ${viewY}`;document.title=`Good Boy — ${MONTHS[viewM]} ${viewY}`;prevBtn.disabled=atStart();const state=ensureMonth(viewY,viewM),count=daysInMonth(viewY,viewM),first=new Date(viewY,viewM,1).getDay(),cells=Math.ceil((first+count)/7)*7;daysEl.innerHTML='';for(let i=0;i<cells;i++){const d=i-first+1,cell=document.createElement('div');if(d<1||d>count){cell.className='day blank';daysEl.appendChild(cell);continue}cell.className='day';cell.tabIndex=0;const date=document.createElement('div');date.className='date';date.innerHTML=state[d].cloud?`<span class="date-cloud">${d}</span>`:d;cell.appendChild(date);const slots=document.createElement('div');slots.className='slots';for(let s=0;s<4;s++){const sl=document.createElement('div');sl.className='slot'+(state[d].stamps[s]?' filled':'');if(state[d].stamps[s]){sl.innerHTML=stampSvg(state[d].stamps[s]);sl.onclick=e=>{e.stopPropagation();state[d].stamps.splice(s,1);save('Stamp removed ✓');render(true)}}slots.appendChild(sl)}cell.appendChild(slots);cell.onclick=()=>{selected=d;status.textContent=`${MONTHS[viewM]} ${d} selected`;highlight()};daysEl.appendChild(cell)}highlight();save()}
 document.querySelectorAll('[data-stamp]').forEach(b=>b.onclick=()=>{if(!selected){status.textContent='Select a date first.';return}const state=ensureMonth(viewY,viewM);if(state[selected].stamps.length>=4){status.textContent='That date already has four stamps.';return}state[selected].stamps.push(b.dataset.stamp);save('Stamp added ✓');render(true)});
 document.getElementById('cloud').onclick=()=>{if(!selected){status.textContent='Select a date first.';return}const state=ensureMonth(viewY,viewM);state[selected].cloud=!state[selected].cloud;save(state[selected].cloud?'Date cloud added ✓':'Date cloud removed ✓');render(true)};
 document.getElementById('clearDay').onclick=()=>{if(!selected)return;const state=ensureMonth(viewY,viewM);state[selected]={stamps:[],cloud:false};save('Selected day cleared ✓');render(true)};
@@ -120,7 +144,9 @@ document.getElementById('clearMonth').onclick=()=>{if(confirm(`Clear all of ${MO
 document.getElementById('prevMonth').onclick=()=>{if(atStart())return;if(--viewM<0){viewM=11;viewY--}status.textContent='';render()};
 document.getElementById('nextMonth').onclick=()=>{if(++viewM>11){viewM=0;viewY++}status.textContent='';render()};
 document.getElementById('today').onclick=()=>{const n=new Date();viewY=n.getFullYear();viewM=n.getMonth();if(viewY<START.y||(viewY===START.y&&viewM<START.m)){viewY=START.y;viewM=START.m}render()};
-document.getElementById('export').onclick=()=>{save();const blob=new Blob([JSON.stringify({app:'Good Boy',version:1,months:all},null,2)],{type:'application/json'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='good-boy-chart-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),500)};
+document.getElementById('export').onclick=()=>{save();localStorage.setItem(PROFILE_KEY,JSON.stringify(profile));const blob=new Blob([JSON.stringify({app:'Good Boy',version:2,profile,months:all},null,2)],{type:'application/json'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='good-boy-chart-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),500)};
+const importFile=document.getElementById('importFile');document.getElementById('import').onclick=()=>importFile.click();
+importFile.onchange=async()=>{const f=importFile.files&&importFile.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!data||typeof data!=='object'||!data.months||typeof data.months!=='object')throw new Error('Invalid backup');if(!confirm('Import this backup? This will replace the chart data currently saved on this device.')){importFile.value='';return}all=data.months;if(data.profile&&typeof data.profile.name==='string')profile={name:data.profile.name};localStorage.setItem(STORE_KEY,JSON.stringify(all));localStorage.setItem(PROFILE_KEY,JSON.stringify(profile));nameEl.value=profile.name||'';status.textContent='Backup imported ✓';render();}catch(e){status.textContent='That file does not look like a Good Boy backup.'}finally{importFile.value=''}};
 render();
 })();
 </script>
